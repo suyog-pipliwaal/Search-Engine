@@ -24,7 +24,7 @@ def createEmbedding():
 
 
 def get_similar_doc(query):
-    model = model = Doc2Vec.load('doc2vec.model')
+    model = Doc2Vec.load('doc2vec.model')
     hf = h5py.File('vectors.h5', 'r')
     qry_vector = model.infer_vector(gensim.utils.simple_preprocess(query))
     cosin_similarty = dict()
@@ -47,5 +47,6 @@ def get_similar_doc(query):
     for qryid, docid in rel_set.items():
         if qryid == "1":
             print(docid)
+
 get_similar_doc(query)
 # createEmbedding()
