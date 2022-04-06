@@ -1,15 +1,31 @@
-from flask import Flask, jsonify, request
+from flask import Flask, request,jsonify
+from flask_restful import Resource, Api
+from createEmbedding import createEmbedding
+
+
+
 app = Flask(__name__)
-incomes = [
-  { 'description': 'salary', 'amount': 5000 }
-]
+api = Api(app)
+
+class WordEmbedding(Resource):
+    def get(self):
+        corpus = createEmbedding()
+        print(corpus)
+        return "something here"
+
+class HelloWorld(Resource):
+    def get(self):
+        return {'hello': 'world'}
+
+class Ping(Resource):
+    def get(self):
+        return jsonify(msg="server is alive", address=request.host)
 
 
-@app.route("/")
-def hello_world():
-  return "Hello, World!"
+api.add_resource(WordEmbedding, '/')
+api.add_resource(HelloWorld, '/hello')
+api.add_resource(Ping, '/ping')
 
-@app.route("/test")
-def test_world():
-    return jsonify(incomes), 200
+if __name__ == '__main__':
+    app.run(debug=True)
 
