@@ -12,8 +12,8 @@ class Query(Resource):
     def get(self):
         return {'hello': 'world'}
     def post(self):
-        data = request.json
-        query = data['query']
+        query = request.json['query']
+        print(query)
         if query == "":
             return jsonify(msg="no query found")
         cosin_similarty = get_similar_doc(str(query))
