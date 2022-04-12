@@ -3,15 +3,17 @@ from flask_restful import Resource, Api, reqparse
 from createEmbedding import createEmbedding, get_similar_doc
 from retriv import get_documents, get_query, get_ground_truth
 from bm25 import get_bm25_idf
+from flask_cors import CORS
 import json
 app = Flask(__name__)
 api = Api(app)
-
+CORS(app)
 class Query(Resource):
     def get(self):
         return {'hello': 'world'}
     def post(self):
-        query = request.form['query']
+        data = request.json
+        query = data['query']
         if query == "":
             return jsonify(msg="no query found")
         cosin_similarty = get_similar_doc(str(query))

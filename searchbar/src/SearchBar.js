@@ -2,25 +2,32 @@ import React, { useState } from "react";
 import "./SearchBar.css";
 
 
-function SearchBar({ placeholder, data }) {
+function SearchBar({ placeholder}) {
   const [filteredData, setFilteredData] = useState([]);
-  const [wordEntered, setWordEntered] = useState("");
+  const [query, setquery] = useState("");
+  const [docs, setdocs] = useState("");
 
-  const handleFilter = (event) => {
+  const handletextChange = (event) => {
     const searchWord = event.target.value;
-    setWordEntered(searchWord);
+    setquery(searchWord);
   };
 
   const clearInput = () => {
-    setFilteredData([]);
-    setWordEntered("");
+    setquery("");
   };
 
   const onFormSubmit = e => {
     e.preventDefault();
-    const {wordEntered} = this.state;
-    console.log(this.state);
-    // send to server with e.g. `window.fetch`
+    const requestOptions = {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: query})
+    };
+
+    fetch('http://127.0.0.1:5000/query', requestOptions)
+        .then(response => response.json())
+        .then(data => setdocs(data));
+    console.log(docs);
   }
 
   return (
@@ -31,8 +38,8 @@ function SearchBar({ placeholder, data }) {
       <input
         type="text"
         placeholder={placeholder}
-        value={wordEntered}
-        onChange={handleFilter}
+        value={query}
+        onChange={handletextChange}
       />
         <button type="submit">Submit</button>
       </form>
