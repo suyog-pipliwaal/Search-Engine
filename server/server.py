@@ -5,9 +5,13 @@ from retriv import get_documents, get_query, get_ground_truth
 from bm25 import get_bm25_idf
 from flask_cors import CORS
 import json
+from apscheduler.schedulers.background import BackgroundScheduler
 app = Flask(__name__)
 api = Api(app)
 CORS(app)
+sched = BackgroundScheduler(daemon=True)
+sched.add_job(createEmbedding,'interval',minutes=1440)
+sched.start()
 class Query(Resource):
     def get(self):
         return {'hello': 'world'}

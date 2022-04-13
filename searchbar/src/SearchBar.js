@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./SearchBar.css";
-
+import Button from 'react-bootstrap/Button';
 
 function SearchBar({ placeholder}) {
   const [filteredData, setFilteredData] = useState([]);
@@ -41,7 +41,7 @@ function SearchBar({ placeholder}) {
         value={query}
         onChange={handletextChange}
       />
-        <button type="submit">Submit</button>
+       <button type="submit" class="submitButton">submit</button>
       </form>
 
 
