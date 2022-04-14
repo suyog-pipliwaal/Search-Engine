@@ -17,16 +17,11 @@ class Query(Resource):
         return {'hello': 'world'}
     def post(self):
         query = request.json['query']
-        print(query)
         if query == "":
             return jsonify(msg="no query found")
         cosin_similarty = get_similar_doc(str(query))
-        similarty = []
-        for key, value in cosin_similarty.items():
-            similarty.append({str(key):str(value)})
-
         bm25_ranking = get_bm25_idf(query)
-        return jsonify(doc=get_documents(),cosin_similarty=json.dumps(similarty), bm_25=bm25_ranking)
+        return jsonify(bm_25=bm25_ranking, vsm=cosin_similarty)
 
 class Ping(Resource):
     def get(self):

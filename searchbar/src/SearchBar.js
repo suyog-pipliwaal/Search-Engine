@@ -1,11 +1,33 @@
 import React, { useState } from "react";
 import "./SearchBar.css";
-import Button from 'react-bootstrap/Button';
-
+import Button from '@mui/material/Button';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+function List({list}) {
+  if (!list) {
+    return null;
+  }
+  return (
+    <div className="scrollable-div">
+    <ul>
+      {list.map(item => (
+          <Item key={item.id} item={item} />
+      ))}
+    </ul>
+    </div>
+  );
+}
+function Item({item}) {
+  return (
+    <li>
+      {item}
+    </li>
+  );
+}
 function SearchBar({ placeholder}) {
-  const [filteredData, setFilteredData] = useState([]);
   const [query, setquery] = useState("");
   const [docs, setdocs] = useState("");
+  const[loading, setloading] = useState(false);
 
   const handletextChange = (event) => {
     const searchWord = event.target.value;
@@ -23,29 +45,33 @@ function SearchBar({ placeholder}) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: query})
     };
-
+    // setloading(true)
     fetch('http://127.0.0.1:5000/query', requestOptions)
         .then(response => response.json())
         .then(data => setdocs(data));
-    console.log(docs);
+      console.log(docs)
+      // setloading(false)
   }
-
   return (
-    <div className="search">
-      <div className="searchInputs">
-
-      <form onSubmit={e => { onFormSubmit(e) }}>
-      <input
-        type="text"
-        placeholder={placeholder}
-        value={query}
-        onChange={handletextChange}
-      />
-       <button type="submit" class="submitButton">submit</button>
-      </form>
-
-
+    <div>
+      <div className="search">
+        <div className="searchInputs">
+          <form onSubmit={e => { onFormSubmit(e) }}>
+            <input type="text" placeholder={placeholder} value={query} onChange={handletextChange}/>
+            <Button variant="contained">Submit</Button>
+          </form>
+        </div>
       </div>
+
+      <div>
+        <h3> documents using BM 25 </h3>
+          <List list={docs['bm_25']} />
+      </div>
+      <div>
+        <h3> documents using vector space model </h3>
+        <List list={docs['vsm']}/>
+      </div>
+
     </div>
   );
 }

@@ -51,4 +51,4 @@ def get_bm25_idf(query):
     #     if index == 10:
     #         break
     #     print(docs)
-# get_bm25_idf("will smith")
+# print(type(get_bm25_idf("zuckerman")))

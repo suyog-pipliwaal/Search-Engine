@@ -23,11 +23,11 @@ def createEmbedding():
 
 
 def get_similar_doc(query):
+    doc_set, doc_id, doc_text = get_documents()
     model = Doc2Vec.load('doc2vec.model')
     hf = h5py.File('vectors.h5', 'r')
     qry_vector = model.infer_vector(gensim.utils.simple_preprocess(query))
     cosin_similarty = dict()
-
     for id, vector in hf.items():
         doc_vec = np.array(vector)
 
@@ -35,8 +35,11 @@ def get_similar_doc(query):
 
         cosin_similarty[id] = cosin
 
-        sorted_cosin_sim = dict(sorted(cosin_similarty.items(), key=operator.itemgetter(1),reverse=True))
-    return sorted_cosin_sim
+    sorted_cosin_sim = dict(sorted(cosin_similarty.items(), key=operator.itemgetter(1),reverse=True))
+    docs = []
+    for key, value in sorted_cosin_sim.items():
+        docs.append( (doc_set[str(key)]+str(value) ))
+    return docs
     # print("Top 10 doc by our vsm:-")
     # for index, (id, sim) in enumerate(sorted_cosin_sim.items()):
     #     if index == 10:
@@ -48,5 +51,5 @@ def get_similar_doc(query):
     #     if qryid == "1":
     #         print(docid)
 
-# get_similar_doc(query)
+# print("=========>", type(get_similar_doc("will smith")))
 # createEmbedding()
