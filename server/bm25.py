@@ -44,7 +44,8 @@ def get_bm25_idf(query):
         q_terms_only_df = bm25_idf[q_terms]
         score_q_d = q_terms_only_df.sum(axis=1)
         ranking = sorted(zip(documents,score_q_d.values), key = lambda tup:tup[1], reverse=True)
-        return ranking
+        # return ranking
+        return sorted(zip(bm25_df.index.values,score_q_d.values), key = lambda tup:tup[1], reverse=True)
     except:
         return -1
     # for index, docs in enumerate(ranking):
@@ -52,3 +53,18 @@ def get_bm25_idf(query):
     #         break
     #     print(docs)
 # print(type(get_bm25_idf("zuckerman")))
+def precision_at_k(k=20):
+    doc_ranking = get_bm25_idf(query)
+if __name__=='__main__':
+    rel_set = get_ground_truth()
+    qry_set, qry_id = get_query()
+    for id, doc in rel_set.items():
+        print("query = ", qry_set[str(id)], end="")
+        doc_ranking = get_bm25_idf(qry_set[str(id)])
+        if doc_ranking == -1:
+            print("<-------------> no doc found")
+        else:
+            retrieved = [doc[0] for doc in doc_ranking[:20]]
+            print(retrieved)
+        # relevant_docs = 0
+        # for index, (qry_id, doc_ids) in enumerate(rel_set.items()):
